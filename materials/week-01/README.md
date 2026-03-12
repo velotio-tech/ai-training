@@ -222,6 +222,11 @@
 | Observability | Log all LLM calls, tool invocations, latencies          |
 
 
+**Architecture Diagram**
+
+![Architecture Diagram](image.png)
+
+
 **Evaluation Criteria**
 
 - Agent correctly routes between tools by query intent
