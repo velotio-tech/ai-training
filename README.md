@@ -1,11 +1,39 @@
-# AI Training Programme
+# R Systems Agentic AI Engineering Accelerator
 
----
+## 2-Week Intensive Training Program for Senior Engineers
 
 ### Introduction
 
 Structured programme for engineers: AI/ML, LLMs, and practical AI engineering. 
 
+**Expected Competencies Post-Training**
+
+Engineers completing this accelerator will be able to:
+
+- Design and implement robust agentic PoCs with multi-tool integrations
+- Orchestrate multi-agent workflows using supervisor, swarm, and graph-based patterns
+- Implement comprehensive evaluation pipelines with LLM-as-judge and automated scoring
+- Build feedback loops that improve agent performance
+- Build responsible AI systems with guardrails, prompt injection defense, and compliance logging
+
+
+
+**Program Structure Overview**
+
+
+| Week                  | Theme                                          | Focus Areas                           |
+| --------------------- | ---------------------------------------------- | ------------------------------------- |
+| Week 1                | Foundations & Core Patterns |     LLM fundamentals, prompting, memory/state, tool calling, first agent build  |
+| Week 2            | Multi-Agent & Production            | Framework mastery, multi-agent patterns, evals, observability, responsible AI, capstone |
+| Assignment     | Assignment                      | Capstone Project     |
+
+
+
+**Daily Commitment**
+
+- 6-8 hours of focused learning per day
+- Self-paced reading → Hands-on exercises → Mini-project implementation
+- Slack / Teams channel for Q&A, optional daily office hours
 
 ---
 

@@ -40,7 +40,7 @@ Build a production-ready multi-agent customer support system that demonstrates m
 - Shared: Memory store, Knowledge base, Tool registry
 - Safety & Observability: Input/output guardrails, full tracing, HITL escalation
 
-**Requirements**
+**Functional Requirements**
 
 | Requirement | Description | Acceptance Criteria |
 |-------------|--------------------|--------------------|
@@ -53,9 +53,60 @@ Build a production-ready multi-agent customer support system that demonstrates m
 | Observability | Full tracing and cost tracking | All LLM calls traced with costs |
 | Evaluation | Automated test suite | 20+ test cases with scoring |
 
+**Technical Specifications**
+
+Framework Choice: Select one primary framework:
+
+- LangGraph (recommended for complex state management)
+- CrewAI (recommended for role-based collaboration)
+- OpenAI Agents SDK (recommended for OpenAI-centric stacks)
+- AWS Strands (recommended for AWS deployments)
+
+**Required Tools (Mock or Real):**
+
+
+| Agent | Required Tools | 
+|-------------|--------------------|
+| Billing Agent | `get_invoice`, `get_payment_history`, `update_payment_method`|
+| Technical Agent | `run_diagnostics`, `check_service_status`, `create_ticket`|
+| Billing Agent | `get_order_details`, `calculate_refund`, `process_refund` (HITL)|
+
+**State Schema**
+
+```bash
+class CustomerSupportState(TypedDict):
+    messages: Annotated[list, add_messages]
+    customer_id: str
+    current_agent: str
+    ticket_id: Optional[str]
+    conversation_summary: str
+    pending_actions: list
+    guardrail_flags: list
+```
+
+
 **Evaluation Rubric:** Architecture 20%, Functionality 25%, Safety 20%, Observability 15%, Code Quality 10%, Evaluation Suite 10%.
 
-**Deliverables:** Source code (GitHub), README (architecture, setup, framework choice, limitations), test suite (20+ cases), optional 5-min demo video.
+| Category | Weight | Criteria |
+|-------------|--------------------|--------------------|
+| Architecture | 20% | Clean separation, proper agent design, scalable structure |
+| Functionality | 25% | All requirements met, correct routing, proper handoffs |
+| Safety | 20% | Effective guardrails, HITL implementation, injection defense |
+| Observability | 15% | Complete tracing, cost tracking, debugging capability |
+| Code Quality | 10% | Clean code, documentation, error handling |
+| Evaluation Suite | 10% | Comprehensive test cases, automated scoring |
+
+
+**Deliverables:** 
+
+- Source code (GitHub)
+- README 
+    - Architecture diagram, 
+    - Setup Instrcutions
+    - Framework choice justification
+    - Known limitations
+- Test Suite: 20+ test cases with automated evaluation
+- Demo Video: 5-minute walkthrough of key features (optional but recommended)
 
 **Repository Setup Instructions**
 

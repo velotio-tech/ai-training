@@ -2,8 +2,6 @@
 
 **Theme:** Foundations & Core Patterns — LLM fundamentals, prompting, memory/state, tool calling, first agent build.
 
-**Daily commitment:** 6–8 hours. Format: Self-paced reading → Hands-on exercises → Mini-project.
-
 ---
 
 ## Day 1: Understanding How LLMs Work
@@ -14,6 +12,7 @@
 - Master key inference parameters: temperature, top-p, top-k sampling
 - Recognize why traditional deterministic testing fails with LLMs
 - Understand the training lifecycle: pre-training → fine-tuning → RLHF/DPO
+- FastAPI Framework (Backend)
 
 **Core Concepts**
 
@@ -46,10 +45,16 @@
 - LLM Parameters Explained — [https://txt.cohere.com/llm-parameters-best-outputs-language-ai/](https://txt.cohere.com/llm-parameters-best-outputs-language-ai/)
 - LLM Fundamentals - [ChatGPT Prompt Engineering](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/)
 - Structured outputs - [Structured model outputs \| OpenAI API](https://developers.openai.com/api/docs/guides/structured-outputs)
+- FastAPI Framework (Backend) - [Introduction to FastAPI framework (Short Course) | Coursera](https://www.coursera.org/projects/introduction-to-fastapi-framework)
 - RAG architecture - [OpenAI Retrieval](https://platform.openai.com/docs/guides/retrieval)
 - RAG evaluation - [Evaluating RAG (OpenAI Cookbook)](https://cookbook.openai.com/examples/evaluating_rag_with_llamaindex)
 
-**Glossary Terms to Master:** Transformer, Attention Mechanism, Tokenization, BPE, Softmax, Logits, Greedy Decoding, Beam Search, LoRA, QLoRA, PEFT, DPO, Constitutional AI
+**Glossary Terms to Master:** 
+
+- Transformer, Attention Mechanism, Tokenization, BPE (Byte-Pair Encoding)
+- Softmax, Logits, Greedy Decoding, Beam Search
+- LoRA, QLoRA, Parameter-Efficient Fine-Tuning (PEFT)
+- Direct Preference Optimization (DPO), Constitutional AI
 
 ---
 
@@ -76,9 +81,11 @@
 
 **Hands-On**
 
-- ReAct Agent Simulation: Prompt that makes the LLM follow Thought→Action→Observation (e.g. weather + clothing recommendation).
-- Structured Output Validator: Prompt that reliably returns JSON; test with 20 inputs; apply Pydantic validation.
-- TOON Experiment: Convert 10-row tabular dataset to TOON; compare token usage vs JSON.
+- ReAct Agent Simulation: Implement a prompt that makes the LLM follow Thought→Action→Observation pattern to
+solve a multi-step problem (e.g., "Find the weather in my city and recommend appropriate clothing").
+- Structured Output Validator: Create a prompt that reliably returns JSON. Test with 20 different inputs and measure
+success rate. Apply Pydantic validation.
+- TOON Experiment: Convert a 10-row tabular dataset to TOON format and compare token usage vs JSON.
 
 **Resources**
 
@@ -115,9 +122,9 @@
 
 **Hands-On**
 
-- Conversation Summarizer: Chatbot that summarizes history when it exceeds 2000 tokens.
-- Vector Memory Integration: Long-term memory with ChromaDB or FAISS; store and retrieve user facts.
-- State Checkpoint Demo: LangGraph SqliteSaver — agent that can be interrupted and resumed.
+- Conversation Summarizer: Build a chatbot that automatically summarizes conversation history when it exceeds 2000 tokens, maintaining the summary as compressed context.
+- Vector Memory Integration: Implement long-term memory using ChromaDB or FAISS. Store user facts and retrieve them in subsequent conversations.
+- State Checkpoint Demo: Using LangGraph's SqliteSaver, create an agent that can be interrupted and resumed with full state recovery.
 
 **Resources**
 
@@ -140,6 +147,30 @@
 - Handle tool errors gracefully with retry logic
 - Understand tool selection strategies for large toolsets
 
+**Tool Definition Best Practices**
+
+```bash
+from openai import OpenAI
+
+tools = [{
+    "type": "function",
+    "function": {
+        "name": "get_order_status",
+        "description": "Retrieves the current status of a customer order including shipping updates and estim
+        "parameters": {
+            "type": "object",
+                "properties": {
+                    "order_id": {
+                        "type": "string",
+                        "description": "Order ID in format ORD-XXXXXX (e.g., ORD-123456)"
+                    }
+                },
+                "required": ["order_id"]
+        }
+    }
+}]
+```
+
 **Tool Selection Strategies**
 
 
@@ -153,9 +184,9 @@
 
 **Hands-On**
 
-- Multi-Tool Agent: At least 3 tools (calculator, weather API, web search mock); correct selection by query.
-- Error Handling Lab: Retry logic, fallback responses, user notification when tools fail.
-- Tool Tracing: Log all tool invocations (inputs, outputs, latency); simple dashboard view.
+- Multi-Tool Agent: Build an agent with at least 3 tools (calculator, weather API, web search mock). The agent should correctly select and invoke the appropriate tool based on user query.
+- Error Handling Lab: Implement graceful degradation when tools fail—retry logic, fallback responses, and user notification.
+- Tool Tracing: Log all tool invocations with inputs, outputs, and latency. Create a simple dashboard view.
 
 **Resources**
 
@@ -165,7 +196,7 @@
 - LangChain Tools — [https://python.langchain.com/docs/concepts/tools/](https://python.langchain.com/docs/concepts/tools/)
 - Tool / function calling — [OpenAI Tools](https://platform.openai.com/docs/guides/tools)
 
-**Deliverable:** Functional multi-tool agent with error handling and logging.
+**Deliverable:** A functional multi-tool agent with comprehensive error handling and logging.
 
 ---
 
@@ -189,12 +220,31 @@
 | Confidence Escalation | When model uncertainty is high                 | Route to human queue                  |
 | Feedback Collection   | After task completion                          | Thumbs up/down + optional comments    |
 
+**LangGraph Interrupt Example**
+```bash
+from langgraph.types import interrupt
+def sensitive_action_node(state):
+    action = state["pending_action"]
+
+    # Pause for human approval
+    human_response = interrupt({
+        "question": f"Approve this action? {action}",
+        "options": ["approve", "reject", "modify"]
+    })
+
+    if human_response["choice"] == "approve":
+        return execute_action(action)
+    elif human_response["choice"] == "modify":
+        return {"pending_action": human_response["modified_action"]}
+    else:
+        return {"status": "rejected"}
+```
 
 **Hands-On**
 
-- Approval Workflow: Agent pauses for human approval before money or data deletion.
-- Confidence Router: Classification agent that escalates when confidence < 0.7.
-- Feedback Loop: Q&A agent that collects and stores user feedback.
+- Approval Workflow: Create an agent that pauses for human approval before any action involving money or data deletion.
+- Confidence Router: Implement a classification agent that escalates to humans when confidence score is below 0.7.
+- Feedback Loop: Build a Q&A agent that collects user feedback and stores it for later analysis.
 
 **Resources**
 
@@ -202,7 +252,7 @@
 - LangGraph Interrupt Function — [https://langchain-ai.github.io/langgraph/reference/types/#langgraph.types.interrupt](https://langchain-ai.github.io/langgraph/reference/types/#langgraph.types.interrupt)
 - Designing HITL AI Systems — [https://huyenchip.com/2024/07/01/human-in-the-loop.html](https://huyenchip.com/2024/07/01/human-in-the-loop.html)
 
-**Deliverable:** Agent with at least two HITL checkpoints and feedback collection.
+**Deliverable:** An agent with at least two HITL checkpoints and a feedback collection mechanism.
 
 ---
 
@@ -223,7 +273,6 @@
 
 
 **Architecture Diagram**
-
 ![Architecture Diagram](image.png)
 
 
@@ -235,4 +284,8 @@
 - Logs capture agent decisions and tool calls
 - Code clean, documented, best practices
 
-**Stretch Goals:** Streaming responses; conversation summarization; web UI (Gradio/Streamlit).
+**Stretch Goals:** 
+
+- Add streaming responses for better UX
+- Implement conversation summarization when context gets long.
+- Create a simple web UI using Gradio or Streamlit
