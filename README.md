@@ -71,3 +71,12 @@ Use the track resources (Track A, Track B, Track C) [full doc](materials/AI-Engi
 
 ---
 
+## Appendices
+
+| Appendix | Description |
+|----------|-------------|
+| [Appendix A: Tool & Resource Quick Reference](materials/AppendixA-Tool-Resource-Quick-Reference.md) | Tool & Resource Quick Reference |
+| [Appendix B: Glossary of Key Terms](materials/AppendixB-Glossary-of-Key-Terms.md) | Glossary of Key Terms |
+
+---
+
